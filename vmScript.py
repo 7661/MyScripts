@@ -3,32 +3,22 @@ import os
 import re
 import fnmatch
 import glob
-
+import sys
 import argparse
 import re
 import os
 
+print ('VM Version:', sys.argv[1]);
+print ('VM Version serial:', sys.argv[2]);
+print ('TC tier:', sys.argv[3]);
 
-parser = argparse.ArgumentParser(description='The script is to run the batch script for Virtual Machine.')
-
-parser.add_argument('vmversion', metavar='N', nargs='+',
-                   help='an integer for the accumulator')
-
-parser.add_argument('tier', metavar='P', nargs='+',
-                   help='an integer for the accumulator')
-				   
-args = 	parser.parse_args();
-
-print (args.vmversion);
-
-print (args.tier);	   
-
-#Hard coding the vm directory to save trouble
+#Hard coding the vm directory to save searching
 path = "C:\VMSofts";
 
-vmVersion =args.vmversion[0];
-tier = args.tier[0];
-regxE="tc"+vmVersion+"_setup_"+tier+"t"+".bat";
+vmVersion = sys.argv[1];
+serial = sys.argv[2];
+tier = sys.argv[3];
+regxE="tc"+vmVersion+serial+"_setup_"+tier+"t"+".bat";
 
 for root, dirs, files in os.walk(path):
     for file in files:
@@ -41,11 +31,18 @@ for root, dirs, files in os.walk(path):
             tmp = os.popen("tasklist").read()  
             if "java.exe" in tmp:
                 os.system("taskkill /im java.exe /f")
-            from subprocess import Popen
-            program = r'path';
-            p = Popen(regxE,cwd=rootPath);
-            stdout, stderr = p.communicate();
+            print('Full Path of the *.bat script: ',fullPath);
+            os.system(fullPath);
+            # from subprocess import Popen
+            # program = r'path';
+            # p = Popen(regxE,cwd=rootPath);
+            # stdout, stderr = p.communicate();
+            # print (stdout);
+            # print (stderr);
+            #p.terminate();
             abspath = os.path.abspath(__file__);
             dname = os.path.dirname(abspath);
             os.chdir(dname);
+            print("Script Location:", dname);
+print ('NX is setup to run in Managed mode');
 
